@@ -1,7 +1,35 @@
-import { useState } from 'react';
-import './App.css';
+import { useEffect, useState } from 'react';
 
+import {
+  onAuthStateChanged,
+  signOut
+} from 'firebase/auth';
+
+import { auth } from './firebase';
+import Auth from './Auth';
+
+import './App.css';
 function App() {
+   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      setAuthLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  async function handleLogout() {
+    try {
+      await signOut(auth);
+    } catch (error) {
+      console.error('Logout failed:', error);
+      alert('Unable to log out. Please try again.');
+    }
+  }
   const [tasks, setTasks] = useState(() => {
     return JSON.parse(localStorage.getItem('tasks') || '[]');
   });
@@ -78,15 +106,35 @@ function App() {
     setDueDate('');
   }
 
-  const completed = tasks.filter(task => task.completed).length;
+   const completed = tasks.filter(task => task.completed).length;
   const pending = tasks.length - completed;
+
+  if (authLoading) {
+    return <p className="loading">Loading Task Tracker...</p>;
+  }
+
+  if (!user) {
+    return <Auth />;
+  }
 
   return (
     <div className="app">
       <header className="header">
-        <h1>Task Tracker</h1>
-        <p>Organize your tasks. Track your progress.</p>
-      </header>
+  <h1>Task Tracker</h1>
+  <p>Organize your tasks. Track your progress.</p>
+
+  <div className="user-info">
+    <span>Signed in as: {user.email}</span>
+
+    <button
+      type="button"
+      onClick={handleLogout}
+      className="logout-btn"
+    >
+      Log Out
+    </button>
+  </div>
+</header>
 
       <main className="container">
         <section className="stats">
