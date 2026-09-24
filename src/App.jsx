@@ -7,6 +7,7 @@ import {
 
 import { auth } from './firebase';
 import Auth from './Auth';
+import Settings from './Settings';
 
 import {
   createTask,
@@ -22,6 +23,9 @@ function App() {
   // Firebase Authentication
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
+
+  // Page navigation
+  const [currentPage, setCurrentPage] = useState('dashboard');
 
   // Task data
   const [tasks, setTasks] = useState([]);
@@ -50,6 +54,7 @@ function App() {
         setTasks([]);
         setTaskError('');
         setEditingId(null);
+        setCurrentPage('dashboard');
         setAuthLoading(false);
 
         if (!currentUser) {
@@ -256,6 +261,19 @@ function App() {
     return <Auth />;
   }
 
+  // Show Profile & Settings page
+  if (currentPage === 'settings') {
+    return (
+      <Settings
+        user={user}
+        onBack={() => setCurrentPage('dashboard')}
+        onProfileUpdated={() => {
+          setUser({ ...auth.currentUser });
+        }}
+      />
+    );
+  }
+
   // Main dashboard
   return (
     <div className="app">
@@ -266,7 +284,18 @@ function App() {
         <p>Organize your tasks. Track your progress.</p>
 
         <div className="user-info">
-        <span> Welcome back, {user.displayName || 'User'}!</span>
+
+          <span>
+            Welcome back, {user.displayName || 'User'}!
+          </span>
+
+          <button
+            type="button"
+            className="logout-btn"
+            onClick={() => setCurrentPage('settings')}
+          >
+            Profile & Settings
+          </button>
 
           <button
             type="button"
@@ -276,6 +305,7 @@ function App() {
           >
             Log Out
           </button>
+
         </div>
       </header>
 
