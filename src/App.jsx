@@ -266,7 +266,7 @@ function App() {
         <p>Organize your tasks. Track your progress.</p>
 
         <div className="user-info">
-          <span>Signed in as: {user.email}</span>
+        <span> Welcome back, {user.displayName || 'User'}!</span>
 
           <button
             type="button"

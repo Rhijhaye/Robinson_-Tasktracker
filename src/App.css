@@ -286,3 +286,32 @@ button:hover {
   margin-top: 100px;
   font-size: 20px;
 }
+/* Forgot Password */
+
+.forgot-password {
+  text-align: right;
+  margin-top: 14px;
+}
+
+.forgot-password button {
+  background: transparent;
+  color: #1d4ed8;
+  padding: 5px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.forgot-password button:hover {
+  text-decoration: underline;
+}
+
+/* Password reset confirmation */
+
+.auth-success {
+  background: #dcfce7;
+  color: #166534;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-top: 15px;
+}
