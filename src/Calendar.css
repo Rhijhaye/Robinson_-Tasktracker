@@ -1,0 +1,149 @@
+
+/* ========================================
+   TASK TRACKER CALENDAR
+======================================== */
+
+.calendar-panel {
+  display: flex;
+  justify-content: center;
+}
+
+.react-calendar {
+  width: 100%;
+  max-width: 850px;
+  background: var(--card-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 15px;
+  font-family: inherit;
+}
+
+.react-calendar button {
+  color: var(--text-color);
+  border-radius: 8px;
+}
+
+.react-calendar__navigation {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.react-calendar__navigation button {
+  background: var(--input-color);
+  font-weight: 600;
+}
+
+.react-calendar__navigation button:hover {
+  background: var(--border-color);
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  font-weight: 600;
+  color: var(--muted-color);
+}
+
+.react-calendar__month-view__weekdays abbr {
+  text-decoration: none;
+}
+
+.react-calendar__tile {
+  min-height: 85px;
+  background: var(--card-color);
+  border: 1px solid var(--border-color);
+  padding: 10px 5px;
+}
+
+.react-calendar__tile:hover {
+  background: var(--input-color);
+}
+
+.react-calendar__tile--now {
+  background: var(--input-color);
+  border: 2px solid var(--accent-color);
+}
+
+.react-calendar__tile--active,
+.react-calendar__tile--active:hover {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+.react-calendar__tile--active abbr {
+  color: #ffffff;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  opacity: 0.4;
+}
+
+.calendar-task-indicator {
+  margin-top: 7px;
+  padding: 4px;
+  border-radius: 6px;
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.calendar-task-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 25px;
+}
+
+/* Dark mode */
+
+[data-theme="dark"] .react-calendar {
+  background: var(--card-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .react-calendar__tile {
+  background: var(--card-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .react-calendar__tile:hover {
+  background: #334155;
+}
+
+[data-theme="dark"] .react-calendar__tile--active {
+  background: var(--accent-color);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .react-calendar__navigation button {
+  background: var(--input-color);
+  color: var(--text-color);
+}
+
+[data-theme="dark"] .calendar-task-indicator {
+  background: #1e3a5f;
+  color: #bfdbfe;
+}
+
+/* Mobile responsiveness */
+
+@media (max-width: 600px) {
+
+  .react-calendar {
+    padding: 5px;
+  }
+
+  .react-calendar__tile {
+    min-height: 60px;
+    padding: 5px 2px;
+    font-size: 12px;
+  }
+
+  .calendar-task-indicator {
+    font-size: 9px;
+    padding: 2px;
+  }
+
+}
