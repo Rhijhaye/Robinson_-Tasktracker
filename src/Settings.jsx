@@ -10,7 +10,13 @@ import {
 
 import { auth } from './firebase';
 
-function Settings({ user, onBack, onProfileUpdated }) {
+function Settings({
+  user,
+  onBack,
+  onProfileUpdated,
+  theme,
+  onThemeChange
+}) {
 
   // Profile information
   const [username, setUsername] = useState(
@@ -51,7 +57,6 @@ function Settings({ user, onBack, onProfileUpdated }) {
         displayName: username.trim()
       });
 
-      // Update the dashboard greeting
       onProfileUpdated();
 
       setProfileMessage(
@@ -70,7 +75,7 @@ function Settings({ user, onBack, onProfileUpdated }) {
     }
   }
 
-  // Change account password
+  // Change password
   async function handlePasswordChange(event) {
     event.preventDefault();
 
@@ -98,7 +103,6 @@ function Settings({ user, onBack, onProfileUpdated }) {
         throw new Error('No authenticated user available.');
       }
 
-      // Verify the current password before updating
       const credential = EmailAuthProvider.credential(
         currentUser.email,
         currentPassword
@@ -148,7 +152,6 @@ function Settings({ user, onBack, onProfileUpdated }) {
   async function handlePasswordReset() {
     setPasswordMessage('');
     setPasswordError('');
-
     setPasswordLoading(true);
 
     try {
@@ -156,10 +159,7 @@ function Settings({ user, onBack, onProfileUpdated }) {
         throw new Error('No email address available.');
       }
 
-      await sendPasswordResetEmail(
-        auth,
-        user.email
-      );
+      await sendPasswordResetEmail(auth, user.email);
 
       setPasswordMessage(
         'Password reset instructions have been sent to your email.'
@@ -180,6 +180,7 @@ function Settings({ user, onBack, onProfileUpdated }) {
   return (
     <main className="container">
 
+      {/* Settings navigation */}
       <section className="panel">
 
         <button
@@ -192,7 +193,8 @@ function Settings({ user, onBack, onProfileUpdated }) {
         <h1>Profile & Settings</h1>
 
         <p>
-          Manage your account information and security.
+          Manage your account information,
+          security, and appearance.
         </p>
 
       </section>
@@ -208,7 +210,7 @@ function Settings({ user, onBack, onProfileUpdated }) {
 
         <p>
           <strong>Account Created:</strong>{' '}
-          {user.metadata.creationTime
+          {user.metadata?.creationTime
             ? new Date(
                 user.metadata.creationTime
               ).toLocaleDateString()
@@ -265,7 +267,7 @@ function Settings({ user, onBack, onProfileUpdated }) {
 
       </section>
 
-      {/* Password Management */}
+      {/* Account Security */}
       <section className="panel">
 
         <h2>Account Security</h2>
@@ -369,6 +371,46 @@ function Settings({ user, onBack, onProfileUpdated }) {
         >
           Send Password Reset Email
         </button>
+
+      </section>
+
+      {/* Appearance Settings */}
+      <section className="panel">
+
+        <h2>Appearance</h2>
+
+        <p>
+          Customize how your Task Tracker looks.
+        </p>
+
+        <div className="theme-setting">
+
+          <div>
+            <strong>Dark Mode</strong>
+
+            <p>
+              Switch between light and dark themes.
+            </p>
+          </div>
+
+          <label className="theme-switch">
+
+            <input
+              type="checkbox"
+              checked={theme === 'dark'}
+              onChange={(event) =>
+                onThemeChange(
+                  event.target.checked ? 'dark' : 'light'
+                )
+              }
+              aria-label="Enable dark mode"
+            />
+
+            <span className="theme-slider"></span>
+
+          </label>
+
+        </div>
 
       </section>
 

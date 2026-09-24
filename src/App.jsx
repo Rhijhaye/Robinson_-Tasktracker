@@ -27,6 +27,17 @@ function App() {
   // Page navigation
   const [currentPage, setCurrentPage] = useState('dashboard');
 
+  // Light and dark mode
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('taskTrackerTheme') || 'light';
+  });
+
+  // Apply theme and save preference
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('taskTrackerTheme', theme);
+  }, [theme]);
+
   // Task data
   const [tasks, setTasks] = useState([]);
   const [tasksLoading, setTasksLoading] = useState(false);
@@ -40,7 +51,7 @@ function App() {
   const [dueDate, setDueDate] = useState('');
   const [editingId, setEditingId] = useState(null);
 
-  // Listen for Firebase authentication changes
+  // Firebase Authentication listener
   useEffect(() => {
     let active = true;
     let requestId = 0;
@@ -96,7 +107,7 @@ function App() {
     };
   }, []);
 
-  // Log out
+  // Logout
   async function handleLogout() {
     if (taskSaving) return;
 
@@ -128,7 +139,7 @@ function App() {
     }
   }
 
-  // CREATE and UPDATE tasks
+  // Create and update tasks
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -165,7 +176,7 @@ function App() {
     }
   }
 
-  // Mark task as completed or pending
+  // Complete or reopen task
   async function toggleComplete(id) {
     if (!user || taskSaving || tasksLoading) return;
 
@@ -192,7 +203,7 @@ function App() {
     }
   }
 
-  // DELETE task
+  // Delete task
   async function handleDeleteTask(id) {
     if (!user || taskSaving || tasksLoading) return;
 
@@ -222,15 +233,17 @@ function App() {
     }
   }
 
-  // Load a task into the edit form
+  // Edit task
   function editTask(task) {
     if (taskSaving || tasksLoading) return;
 
     setEditingId(task.id);
     setTitle(task.title);
     setDescription(task.description || '');
-    setPriority(task.priority);
+    setPriority(task.priority || 'Medium');
     setDueDate(task.dueDate || '');
+
+    setCurrentPage('dashboard');
 
     window.scrollTo({
       top: 0,
@@ -238,7 +251,6 @@ function App() {
     });
   }
 
-  // Cancel editing
   function cancelEdit() {
     resetForm();
   }
@@ -247,7 +259,7 @@ function App() {
   const completed = tasks.filter(task => task.completed).length;
   const pending = tasks.length - completed;
 
-  // Authentication loading screen
+  // Loading screen
   if (authLoading) {
     return (
       <p className="loading">
@@ -256,21 +268,32 @@ function App() {
     );
   }
 
-  // Show login/registration page
+  // Login and registration
   if (!user) {
     return <Auth />;
   }
 
-  // Show Profile & Settings page
+  // Profile and Settings
   if (currentPage === 'settings') {
     return (
-      <Settings
-        user={user}
-        onBack={() => setCurrentPage('dashboard')}
-        onProfileUpdated={() => {
-          setUser({ ...auth.currentUser });
-        }}
-      />
+      <div className="app">
+
+        <header className="header">
+          <h1>Task Tracker</h1>
+          <p>Profile & Settings</p>
+        </header>
+
+        <Settings
+          user={user}
+          theme={theme}
+          onThemeChange={setTheme}
+          onBack={() => setCurrentPage('dashboard')}
+          onProfileUpdated={() => {
+            setUser({ ...auth.currentUser });
+          }}
+        />
+
+      </div>
     );
   }
 
@@ -279,6 +302,7 @@ function App() {
     <div className="app">
 
       <header className="header">
+
         <h1>Task Tracker</h1>
 
         <p>Organize your tasks. Track your progress.</p>
@@ -307,6 +331,7 @@ function App() {
           </button>
 
         </div>
+
       </header>
 
       <main className="container">
@@ -371,6 +396,7 @@ function App() {
             <div className="form-row">
 
               <div>
+
                 <label htmlFor="priority">
                   Priority
                 </label>
@@ -385,9 +411,11 @@ function App() {
                   <option>Medium</option>
                   <option>High</option>
                 </select>
+
               </div>
 
               <div>
+
                 <label htmlFor="dueDate">
                   Due Date
                 </label>
@@ -399,6 +427,7 @@ function App() {
                   onChange={event => setDueDate(event.target.value)}
                   disabled={taskSaving || tasksLoading}
                 />
+
               </div>
 
             </div>
@@ -476,10 +505,10 @@ function App() {
 
                       <span
                         className={`priority ${
-                          task.priority.toLowerCase()
+                          (task.priority || 'Medium').toLowerCase()
                         }`}
                       >
-                        {task.priority} Priority
+                        {task.priority || 'Medium'} Priority
                       </span>
 
                       {task.dueDate && (
