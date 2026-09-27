@@ -164,7 +164,7 @@ The production-ready application files will be generated in the `dist` directory
 
 The application will be deployed using Netlify.
 
-**Live Application:** Deployment link will be added after deployment is completed.
+**Live Application:**(https://6ab887fcdb13484290b52e6a--lovely-griffin-fd0006.netlify.app/).
 
 ## Demonstration Video
 
